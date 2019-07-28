@@ -1,0 +1,6 @@
+type Quote{
+    id:ID! @id
+    text:String!
+    author:String!
+    book:String!
+}

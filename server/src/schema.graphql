@@ -1,0 +1,13 @@
+
+type Query{
+    fetchQuotes:[Quote!]!
+}
+type Mutation{
+    add(book:String!,text:String!,author:String!,id:ID!):Quote!
+}
+type Quote{
+    id:ID!
+    text:String!
+    book:String!
+    author:String!
+}
