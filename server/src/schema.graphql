@@ -4,10 +4,23 @@ type Query{
 }
 type Mutation{
     add(book:String!,text:String!,author:String!,id:ID!):Quote!
+    signup(email:String!,password:String!,name:String!):AuthPayload
+    login(email:String!,password:String!):AuthPayload
 }
 type Quote{
     id:ID!
     text:String!
     book:String!
     author:String!
+    SubmittedBy:User
+}
+type AuthPayload{
+    token:String
+    user:User
+}
+type User{
+    id:ID!
+    name:String!
+    email:String!
+    quotes:[Quote!]!
 }

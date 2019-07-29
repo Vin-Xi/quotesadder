@@ -3,4 +3,12 @@ type Quote{
     text:String!
     author:String!
     book:String!
+    SubmittedBy: User
+}
+type User{
+    id:ID! @id
+    name: String!
+    email: String @unique
+    password: String!
+    quotes:[Quote!]!
 }

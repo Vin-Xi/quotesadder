@@ -7,6 +7,10 @@ module.exports = {
   count: Int!
 }
 
+type AggregateUser {
+  count: Int!
+}
+
 type BatchPayload {
   count: Long!
 }
@@ -20,6 +24,12 @@ type Mutation {
   upsertQuote(where: QuoteWhereUniqueInput!, create: QuoteCreateInput!, update: QuoteUpdateInput!): Quote!
   deleteQuote(where: QuoteWhereUniqueInput!): Quote
   deleteManyQuotes(where: QuoteWhereInput): BatchPayload!
+  createUser(data: UserCreateInput!): User!
+  updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
+  updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
+  upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
+  deleteUser(where: UserWhereUniqueInput!): User
+  deleteManyUsers(where: UserWhereInput): BatchPayload!
 }
 
 enum MutationType {
@@ -43,6 +53,9 @@ type Query {
   quote(where: QuoteWhereUniqueInput!): Quote
   quotes(where: QuoteWhereInput, orderBy: QuoteOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Quote]!
   quotesConnection(where: QuoteWhereInput, orderBy: QuoteOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): QuoteConnection!
+  user(where: UserWhereUniqueInput!): User
+  users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
+  usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
   node(id: ID!): Node
 }
 
@@ -51,6 +64,7 @@ type Quote {
   text: String!
   author: String!
   book: String!
+  SubmittedBy: User
 }
 
 type QuoteConnection {
@@ -60,6 +74,19 @@ type QuoteConnection {
 }
 
 input QuoteCreateInput {
+  id: ID
+  text: String!
+  author: String!
+  book: String!
+  SubmittedBy: UserCreateOneWithoutQuotesInput
+}
+
+input QuoteCreateManyWithoutSubmittedByInput {
+  create: [QuoteCreateWithoutSubmittedByInput!]
+  connect: [QuoteWhereUniqueInput!]
+}
+
+input QuoteCreateWithoutSubmittedByInput {
   id: ID
   text: String!
   author: String!
@@ -89,6 +116,68 @@ type QuotePreviousValues {
   book: String!
 }
 
+input QuoteScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  text: String
+  text_not: String
+  text_in: [String!]
+  text_not_in: [String!]
+  text_lt: String
+  text_lte: String
+  text_gt: String
+  text_gte: String
+  text_contains: String
+  text_not_contains: String
+  text_starts_with: String
+  text_not_starts_with: String
+  text_ends_with: String
+  text_not_ends_with: String
+  author: String
+  author_not: String
+  author_in: [String!]
+  author_not_in: [String!]
+  author_lt: String
+  author_lte: String
+  author_gt: String
+  author_gte: String
+  author_contains: String
+  author_not_contains: String
+  author_starts_with: String
+  author_not_starts_with: String
+  author_ends_with: String
+  author_not_ends_with: String
+  book: String
+  book_not: String
+  book_in: [String!]
+  book_not_in: [String!]
+  book_lt: String
+  book_lte: String
+  book_gt: String
+  book_gte: String
+  book_contains: String
+  book_not_contains: String
+  book_starts_with: String
+  book_not_starts_with: String
+  book_ends_with: String
+  book_not_ends_with: String
+  AND: [QuoteScalarWhereInput!]
+  OR: [QuoteScalarWhereInput!]
+  NOT: [QuoteScalarWhereInput!]
+}
+
 type QuoteSubscriptionPayload {
   mutation: MutationType!
   node: Quote
@@ -111,12 +200,53 @@ input QuoteUpdateInput {
   text: String
   author: String
   book: String
+  SubmittedBy: UserUpdateOneWithoutQuotesInput
+}
+
+input QuoteUpdateManyDataInput {
+  text: String
+  author: String
+  book: String
 }
 
 input QuoteUpdateManyMutationInput {
   text: String
   author: String
   book: String
+}
+
+input QuoteUpdateManyWithoutSubmittedByInput {
+  create: [QuoteCreateWithoutSubmittedByInput!]
+  delete: [QuoteWhereUniqueInput!]
+  connect: [QuoteWhereUniqueInput!]
+  set: [QuoteWhereUniqueInput!]
+  disconnect: [QuoteWhereUniqueInput!]
+  update: [QuoteUpdateWithWhereUniqueWithoutSubmittedByInput!]
+  upsert: [QuoteUpsertWithWhereUniqueWithoutSubmittedByInput!]
+  deleteMany: [QuoteScalarWhereInput!]
+  updateMany: [QuoteUpdateManyWithWhereNestedInput!]
+}
+
+input QuoteUpdateManyWithWhereNestedInput {
+  where: QuoteScalarWhereInput!
+  data: QuoteUpdateManyDataInput!
+}
+
+input QuoteUpdateWithoutSubmittedByDataInput {
+  text: String
+  author: String
+  book: String
+}
+
+input QuoteUpdateWithWhereUniqueWithoutSubmittedByInput {
+  where: QuoteWhereUniqueInput!
+  data: QuoteUpdateWithoutSubmittedByDataInput!
+}
+
+input QuoteUpsertWithWhereUniqueWithoutSubmittedByInput {
+  where: QuoteWhereUniqueInput!
+  update: QuoteUpdateWithoutSubmittedByDataInput!
+  create: QuoteCreateWithoutSubmittedByInput!
 }
 
 input QuoteWhereInput {
@@ -176,6 +306,7 @@ input QuoteWhereInput {
   book_not_starts_with: String
   book_ends_with: String
   book_not_ends_with: String
+  SubmittedBy: UserWhereInput
   AND: [QuoteWhereInput!]
   OR: [QuoteWhereInput!]
   NOT: [QuoteWhereInput!]
@@ -187,6 +318,185 @@ input QuoteWhereUniqueInput {
 
 type Subscription {
   quote(where: QuoteSubscriptionWhereInput): QuoteSubscriptionPayload
+  user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
+}
+
+type User {
+  id: ID!
+  name: String!
+  email: String
+  password: String!
+  quotes(where: QuoteWhereInput, orderBy: QuoteOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Quote!]
+}
+
+type UserConnection {
+  pageInfo: PageInfo!
+  edges: [UserEdge]!
+  aggregate: AggregateUser!
+}
+
+input UserCreateInput {
+  id: ID
+  name: String!
+  email: String
+  password: String!
+  quotes: QuoteCreateManyWithoutSubmittedByInput
+}
+
+input UserCreateOneWithoutQuotesInput {
+  create: UserCreateWithoutQuotesInput
+  connect: UserWhereUniqueInput
+}
+
+input UserCreateWithoutQuotesInput {
+  id: ID
+  name: String!
+  email: String
+  password: String!
+}
+
+type UserEdge {
+  node: User!
+  cursor: String!
+}
+
+enum UserOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  email_ASC
+  email_DESC
+  password_ASC
+  password_DESC
+}
+
+type UserPreviousValues {
+  id: ID!
+  name: String!
+  email: String
+  password: String!
+}
+
+type UserSubscriptionPayload {
+  mutation: MutationType!
+  node: User
+  updatedFields: [String!]
+  previousValues: UserPreviousValues
+}
+
+input UserSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: UserWhereInput
+  AND: [UserSubscriptionWhereInput!]
+  OR: [UserSubscriptionWhereInput!]
+  NOT: [UserSubscriptionWhereInput!]
+}
+
+input UserUpdateInput {
+  name: String
+  email: String
+  password: String
+  quotes: QuoteUpdateManyWithoutSubmittedByInput
+}
+
+input UserUpdateManyMutationInput {
+  name: String
+  email: String
+  password: String
+}
+
+input UserUpdateOneWithoutQuotesInput {
+  create: UserCreateWithoutQuotesInput
+  update: UserUpdateWithoutQuotesDataInput
+  upsert: UserUpsertWithoutQuotesInput
+  delete: Boolean
+  disconnect: Boolean
+  connect: UserWhereUniqueInput
+}
+
+input UserUpdateWithoutQuotesDataInput {
+  name: String
+  email: String
+  password: String
+}
+
+input UserUpsertWithoutQuotesInput {
+  update: UserUpdateWithoutQuotesDataInput!
+  create: UserCreateWithoutQuotesInput!
+}
+
+input UserWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  email: String
+  email_not: String
+  email_in: [String!]
+  email_not_in: [String!]
+  email_lt: String
+  email_lte: String
+  email_gt: String
+  email_gte: String
+  email_contains: String
+  email_not_contains: String
+  email_starts_with: String
+  email_not_starts_with: String
+  email_ends_with: String
+  email_not_ends_with: String
+  password: String
+  password_not: String
+  password_in: [String!]
+  password_not_in: [String!]
+  password_lt: String
+  password_lte: String
+  password_gt: String
+  password_gte: String
+  password_contains: String
+  password_not_contains: String
+  password_starts_with: String
+  password_not_starts_with: String
+  password_ends_with: String
+  password_not_ends_with: String
+  quotes_every: QuoteWhereInput
+  quotes_some: QuoteWhereInput
+  quotes_none: QuoteWhereInput
+  AND: [UserWhereInput!]
+  OR: [UserWhereInput!]
+  NOT: [UserWhereInput!]
+}
+
+input UserWhereUniqueInput {
+  id: ID
+  email: String
 }
 `
       }
