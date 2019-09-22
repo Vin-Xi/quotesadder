@@ -23,7 +23,7 @@ async function login(parent,args,context,info){
     }
 }
 const add=(root,args,context,info)=>{
-    const userId=getUserId(context)
+   const userId=getUserId(context)
     return context.prisma.createQuote({
         book:args.book,
         text:args.text,

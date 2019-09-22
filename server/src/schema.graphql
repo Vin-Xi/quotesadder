@@ -1,9 +1,13 @@
 
 type Query{
-    fetchQuotes:[Quote!]!
+    fetchQuotes(filter:String,skip:Int,first:Int):FetchQuotes!
 }
-type Mutation{
-    add(book:String!,text:String!,author:String!,id:ID!):Quote!
+type FetchQuotes{
+    quotes:[Quote!]!
+    count:Int!
+}
+type Mutation{  
+    add(book:String!,text:String!,author:String!):Quote!
     signup(email:String!,password:String!,name:String!):AuthPayload
     login(email:String!,password:String!):AuthPayload
 }
@@ -23,4 +27,7 @@ type User{
     name:String!
     email:String!
     quotes:[Quote!]!
+}
+type Subscription{
+    newQuote:Quote
 }
